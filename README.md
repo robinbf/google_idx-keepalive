@@ -61,7 +61,6 @@ while true; do
     echo "$(date +%T) | 访问主机器: $TARGET (${WAIT}s)"
     open -a "firefox" "$TARGET"
     sleep $WAIT
-  #下面是另外一台欧洲的机器
   
     echo "$(date +%T) | 访问辅助机器 (60s)"
     open -a "firefox" "https://idx.google.com/u/1/(你机器的id)" 
