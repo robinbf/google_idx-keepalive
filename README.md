@@ -10,8 +10,12 @@
 再后来,我突然想到我其实根本不用一直开着浏览器啊,并且连插件也不用了,只需要过一段时间打开一下就可以了,这样不占用内存.
 并且我自己用chrome浏览器,这个firefox就是专门为了干这件事才装的. 如果我正在用电脑执行了,我就不管它,如果没用电脑,它自己打开然后关闭.
 
-解释一下脚本,第一次开机(冷启动)需要时间长点,并且多台机器不能一起开,必须要在前台足够的时间. 有时候台湾的机器还资源不够时间可能更长. 
-脚本如下:
+解释一下脚本,第一次开机(冷启动)需要时间长点,并且多台机器不能一起开,必须要在前台足够的时间. 有时候台湾的机器还资源不够时间可能更长.如果已经开机了,重新再打开1分钟已经足够了. (你可以根据自己使用的体验调整). 
+
+
+脚本内容如下:
+
+在open后面增加一个 -g参数, 这样启动的时候不会争夺焦点.
 
 
 #电脑每天晚上自动休眠,早晨自动唤醒,时间根据自己需要设置.
@@ -25,7 +29,7 @@ LAST_HOUR=""
 while true; do
     # --- 核心：反 AI 检测逻辑 ---
     PRE_SLEEP_TIME=$(date +%s)
-    NEXT_SLEEP=$((1 + RANDOM % 3000))
+    NEXT_SLEEP=$((1800 + RANDOM % 1000))
     echo "$(date +%T) | 计划随机休眠: ${NEXT_SLEEP}s"
     sleep $NEXT_SLEEP
     
@@ -59,11 +63,11 @@ while true; do
     sleep 5
     
     echo "$(date +%T) | 访问主机器: $TARGET (${WAIT}s)"
-    open -a "firefox" "$TARGET"
+    open -g -a "firefox" "$TARGET"
     sleep $WAIT
   
     echo "$(date +%T) | 访问辅助机器 (60s)"
-    open -a "firefox" "https://idx.google.com/u/1/(你机器的id)" 
+    open -g -a "firefox" "https://idx.google.com/u/1/(你机器的id)" 
     sleep 60
 
     # 彻底关闭进程
