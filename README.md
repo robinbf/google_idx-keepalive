@@ -21,7 +21,6 @@
 #电脑每天晚上自动休眠,早晨自动唤醒,时间根据自己需要设置.
 #!/bin/bash
 
-# 1. 启动自锁：防止 crontab 或重复手动启动导致多个进程
 [[ $(pgrep -f $(basename "$0") | wc -l) -gt 1 ]] && exit 0
 
 LAST_HOUR=""
