@@ -16,12 +16,13 @@
 脚本内容如下:
 
 在open后面增加一个 -g参数, 这样启动的时候不会争夺焦点.
-
-
 #电脑每天晚上自动休眠,早晨自动唤醒,时间根据自己需要设置.
 
 
+
 #!/bin/bash
+
+# 1. 启动自锁：防止 crontab 或重复手动启动导致多个进程
 [[ $(pgrep -f $(basename "$0") | wc -l) -gt 1 ]] && exit 0
 
 LAST_HOUR=""
@@ -29,7 +30,7 @@ LAST_HOUR=""
 while true; do
     # --- 核心：反 AI 检测逻辑 ---
     PRE_SLEEP_TIME=$(date +%s)
-    NEXT_SLEEP=$((1800 + RANDOM % 1000))
+    NEXT_SLEEP=$((1800 + RANDOM % 1200))
     echo "$(date +%T) | 计划随机休眠: ${NEXT_SLEEP}s"
     sleep $NEXT_SLEEP
     
@@ -47,15 +48,14 @@ while true; do
     # --- 业务逻辑 ---
     HOUR=$(date +%H)
     # 2PM 切换逻辑
-    # 两台机器用一个tunnel,xray配置完全一样
     if [ "$HOUR" -ge 14 ]; then
-        TARGET="https://idx.google.com/u/1/tw2-(你机器的id)"
+        TARGET="https://idx.google.com/u/1/tw2-58654741"
     else
-        TARGET="https://idx.google.com/tw-(你机器的id)"
+        TARGET="https://idx.google.com/tw-72229284"
     fi
 
     # 判定冷启动 (180s) 还是 循环保活 (60s)
-    [[ "$HOUR" != "$LAST_HOUR" ]] && WAIT=180 || WAIT=60
+    [[ "$HOUR" != "$LAST_HOUR" ]] && WAIT=$((180 + RANDOM % 121)) || WAIT=$((60 + RANDOM % 121))
     LAST_HOUR=$HOUR
 
     # 执行操作
@@ -65,11 +65,10 @@ while true; do
     echo "$(date +%T) | 访问主机器: $TARGET (${WAIT}s)"
     open -g -a "firefox" "$TARGET"
     sleep $WAIT
-  
-    echo "$(date +%T) | 访问辅助机器 (60s)"
-    open -g -a "firefox" "https://idx.google.com/u/1/(你机器的id)" 
-    sleep 60
 
+    echo "$(date +%T) | 访问辅助机器 (60-180s随机)"
+    open -g -a "firefox" "https://idx.google.com/u/1/idx-eu-67360637"
+sleep $((60 + RANDOM % 120))
     # 彻底关闭进程
     pkill -15 "firefox"
     echo "$(date +%T) | 本轮结束。"
