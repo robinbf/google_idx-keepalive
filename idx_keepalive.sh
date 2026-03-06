@@ -27,9 +27,9 @@ while true; do
     HOUR=$(date +%H)
     # 2PM 切换逻辑
     if [ "$HOUR" -ge 14 ]; then
-        TARGET="https://idx.google.com/u/1/tw2-58654741"
+        TARGET="https://idx.google.com/u/1/tw2"
     else
-        TARGET="https://idx.google.com/tw-72229284"
+        TARGET="https://idx.google.com/tw1"
     fi
 
     # 判定冷启动 (180s) 还是 循环保活 (60s)
@@ -45,7 +45,7 @@ while true; do
     sleep $WAIT
 
     echo "$(date +%T) | 访问辅助机器 (60-180s随机)"
-    open -g -a "firefox" "https://idx.google.com/u/1/idx-eu-67360637"
+    open -g -a "firefox" "https://idx.google.com/u/1/idx-eu"
 sleep $((60 + RANDOM % 120))
     # 彻底关闭进程
     pkill -15 "firefox"
